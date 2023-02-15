@@ -11,8 +11,11 @@ coral_data <- read_excel(here("data", "coral_data.xls"))
 ui <- fluidPage(
   titlePanel("I am adding a title!"),
   sidebarLayout(
-    sidebarPanel("put my widgets here"),
-    radioButtons(inputId = "genus", label = "Choose coral species", choices = c("Groovy coral" = "poc","Funky coral" = "acr"))
+    sidebarPanel("put my widgets here",
+      radioButtons(inputId = "genus",
+                   label = "Choose coral species",
+                   choices = c("Groovy coral" = "poc","Funky coral" = "acr"))
+      ),
     mainPanel("put my graph here")
   )
 )
