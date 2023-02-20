@@ -22,7 +22,18 @@ ui <- fluidPage(
 
 
 # Create the server function:
-server <- function(input, output) {}
+coral_select <- reactive({
+  coral_data %>%
+    filter(genus == input$genus)
+})
+
+output$coral_plot <- renderPlot({
+
+  ggplot(data = coral_select(), aes(x = length, y = width, color = genus)) +
+    geom_point()
+
+})
+
 
 # Combine them into an app:
 shinyApp(ui = ui, server = server)
