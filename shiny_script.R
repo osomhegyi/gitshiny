@@ -39,3 +39,9 @@ output$coral_plot <- renderPlot({
 # Combine them into an app:
 shinyApp(ui = ui, server = server)
 
+
+
+
+
+
+
