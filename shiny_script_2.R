@@ -65,18 +65,6 @@ server <- function(input, output) {
   })
 }
 
-ggplot() +
-  geom_sf(data = ca_counties_sf) +
-  geom_sf(data = ca_dgw_sf, aes(color = dgbs)) +
-  scale_color_gradient(low = 'chartreuse', high = 'magenta')
-
-tmap_mode('view')
-tm_shape(ca_dgw_sf) +
-  tm_dots('dgbs', palette = 'Blues')
-
-#Combine above into an app:
-shinyApp(ui = ui, server = server)
-
 
 
 
@@ -128,4 +116,7 @@ navbarPage("Map of Moorea",
            ), # end tabPanel
 ) #end navbar
 
+
+#Combine above into an app:
+shinyApp(ui = ui, server = server)
 
