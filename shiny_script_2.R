@@ -67,7 +67,6 @@ server <- function(input, output) {
 
 
 
-
 #sliderInput(inputId = "perc_bleach",
             #label = "Percent Bleached", min = 0, max = 100, value =50, step = NULL,
             #round = FALSE, format = "#,##0.#####",
@@ -76,45 +75,8 @@ server <- function(input, output) {
 #textOutput('perc_bleach')
 
 
-navbarPage("Map of Moorea",
-           tabPanel("Project Overview",
-                    titlePanel(h2("Map of Moorea!", align = "center")),
-                    titlePanel(h3("Created By: Jenna + Ooooooolivia", align = "center")),
-                    br(),
-                    br(),
-                    br(),
-                    fixedRow(
-                      column(8,
-                             h1("Project Description", align = "center"),
-                             p("Data was collected by the other Olivia something something description.",
-                             ),
-                             br(),
-                             p("More text here about Moorea."),
-                             br(),
-                             p("More text here about corals."),
-                             br(),
-                             p("More text here about how data was collected.",
-                             ),
-                             br(),
-                             p("The purpose of this Shiny App is to.... MAKE CORALS FIGHT!"),
-                             br(),
-                             h2("Data Citation:", align = "center"),
-                             p("1. Cite data"),
-                             br(),
-                             p("2. Cite data"),
-                             br(),
-                             p("3. Cite data"),
-                      ), # end column
-                      column(4,
-                             br(),
-                             br(),
-                             br(),
-                             br(),
-                             img(src = "insertimage.jpg", width = 450),
-                      ), # end column
-                    ), # end fixedrow
-           ), # end tabPanel
-) #end navbar
+
+
 
 
 #Combine above into an app:
