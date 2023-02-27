@@ -10,11 +10,12 @@ library(shinythemes)
 coral_raw <- read_excel(here("data", "coral_data.xls"))
 
 #user interface:
-ui <- fluidPage(theme = shinytheme("superhero"),
-  titlePanel("Coral Data"),
-  sidebarLayout(
-    sidebarPanel("put my widgets here",
-                 radioButtons(inputId = "genus",
+ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
+                 tabPanel("Widgets",
+                          titlePanel("Coral Data"),
+                          sidebarLayout(
+                            sidebarPanel("put my widgets here",
+                                         radioButtons(inputId = "genus",
                               label = "Choose Coral Species",
                               choices = c("Pocillopora" = "poc","Acropora" = "acr")
                  ),
@@ -30,7 +31,10 @@ ui <- fluidPage(theme = shinytheme("superhero"),
     mainPanel("put my graph here",
               plotOutput(outputId = "coral_plot"),
               tableOutput(outputId = "coral_table"))
-  )
+  )),
+  tabPanel("Coral Map"),
+  tabPanel("Coral vs Climate Change"),
+  tabPanel("Info & Data Sources"),
 )
 
 #Server function:
