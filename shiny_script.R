@@ -16,8 +16,9 @@ ui <- fluidPage(
                    label = "Choose coral species",
                    choices = c("Groovy coral" = "poc","Funky coral" = "acr"))
       ),
-    mainPanel("put my graph here"),
-    plotOutput(outputId = "coral_plot")
+    mainPanel("put my graph here",
+              plotOutput(outputId = "coral_plot")
+    )
   )
 )
 
