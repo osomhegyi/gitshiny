@@ -5,18 +5,34 @@ library(here)
 library(lubridate)
 library(shinythemes)
 library(basemaps)
+library(leaflet)
+library(markdown)
+library(tmap)
+library(sp)
+library(sf)
 
 
 
 # Read in data?
 coral_raw <- read_excel(here("data", "coral_data.xls"))
+# Data wrangling
+coordinates <- coral_raw %>%
+  select('lat', 'long', 'genus')
+
+c_sf <- coordinates %>%
+  st_as_sf(coords = c("long", "lat"), crs = 4326)
+
+# Moorea LETR to find map shapefile
+ggplot(data = c_sf) +
+  geom_sf()
 
 #user interface:
-ui <- fluidPage(theme = shinytheme("superhero"),
-  titlePanel("Coral Data"),
-  sidebarLayout(
-    sidebarPanel("put my widgets here",
-                 radioButtons(inputId = "genus",
+ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
+                 tabPanel("Widgets",
+                          titlePanel("Coral Data"),
+                          sidebarLayout(
+                            sidebarPanel("put my widgets here",
+                                         radioButtons(inputId = "genus",
                               label = "Choose Coral Species",
                               choices = c("Pocillopora" = "poc","Acropora" = "acr")
                  ),
@@ -32,7 +48,19 @@ ui <- fluidPage(theme = shinytheme("superhero"),
     mainPanel("put my graph here",
               plotOutput(outputId = "coral_plot"),
               tableOutput(outputId = "coral_table"))
-  )
+  )),
+  tabPanel("Coral Map",
+           leafletOutput("locations", width = "100%", height = "100%")),
+  tabPanel("Spatial Distribution of Coral Samples"),
+  tabPanel("Coral vs Climate Change"),
+  tabPanel("Info & Data Sources"),
+  # mainPanel(
+  # img(src = 'poc.jpg', align = "left", height = 200, width = 300),
+  # img(src = 'acr.jpg', align = "left", height = 200, width = 300)
+  # the rest of our code
+  # )
+  tabPanel("Coral vs Climate Change"),
+  tabPanel("Info & Data Sources"),
 )
 
 #Server function:
@@ -62,6 +90,13 @@ server <- function(input, output) {
 
   output$coral_table <- renderTable({
     coral_table()
+  })
+
+  output$locations <- renderLeaflet({
+    leaflet(data = coordinates) %>%
+      addTiles() %>%
+      addMarkers("long" =~LONGITUDE, "lat" =~LATITUDE) %>%
+      addProviderTiles(providers$Esri.WorldStreetMap)
   })
 }
 
