@@ -4,7 +4,7 @@ library(readxl)
 library(here)
 library(lubridate)
 library(shinythemes)
-library(basemaps)
+#library(basemaps)
 library(leaflet)
 library(markdown)
 library(tmap)
@@ -14,7 +14,11 @@ library(sf)
 
 
 # Read in data?
-coral_raw <- read_excel(here("data", "coral_data.xls"))
+coral_raw <- read_excel(here("data", "coral_data.xls")) %>%
+  janitor::clean_names() %>%
+  mutate(
+    area = length*width
+  )
 # Data wrangling
 coordinates <- coral_raw %>%
   select('lat', 'long', 'genus')
@@ -43,9 +47,9 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
                  ),
                  selectInput(inputId = "pt_color",
                              label = "Select point color",
-                             choices = c("Purple" = "purple", "ORAAANGE" = "orange"))
+                             choices = c("Purple Coral" = "purple", "Orange Coral" = "orange"))
                               ),
-    mainPanel("put my graph here",
+    mainPanel("Length to Width Distribution by Coral Species",
               plotOutput(outputId = "coral_plot"),
               tableOutput(outputId = "coral_table"))
   )),
@@ -66,7 +70,7 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
 #Server function:
 server <- function(input, output) {
   coral_select <- reactive({
-    coral_data %>%
+    coral_raw %>%
       filter(species == input$genus)
   })
 
@@ -75,8 +79,11 @@ server <- function(input, output) {
       filter(genus == input$genus) %>%
       group_by(site) %>%
       summarize(
-        mean_length = mean(length),
-        mean_width = mean(width)
+        #mean_length = mean(length),
+        #mean_width = mean(width),
+        mean_area = mean(area),
+        mean_perc_dead = mean(perc_dead),
+        mean_perc_bleached = mean(perc_bleach)
       )
   })
 
