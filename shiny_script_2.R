@@ -32,7 +32,7 @@ ggplot(data = c_sf) +
 
 #user interface:
 ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
-                 tabPanel("Widgets",
+                 tabPanel("Map of Moorea",
                           titlePanel("Coral Data"),
                           sidebarLayout(
                             sidebarPanel("put my widgets here",
@@ -53,10 +53,9 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
               plotOutput(outputId = "coral_plot"),
               tableOutput(outputId = "coral_table"))
   )),
-  tabPanel("Coral Map",
+  tabPanel("Spatial Distribution of Coral Samples",
            leafletOutput("locations", width = "100%", height = "100%")),
-  tabPanel("Spatial Distribution of Coral Samples"),
-  tabPanel("Coral vs Climate Change"),
+  tabPanel("Coral Plot"),
   tabPanel("Info & Data Sources"),
   # mainPanel(
   # img(src = 'poc.jpg', align = "left", height = 200, width = 300),
