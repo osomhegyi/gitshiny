@@ -62,8 +62,6 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
   # img(src = 'acr.jpg', align = "left", height = 200, width = 300)
   # the rest of our code
   # )
-  tabPanel("Coral vs Climate Change"),
-  tabPanel("Info & Data Sources"),
 )
 
 #Server function:
