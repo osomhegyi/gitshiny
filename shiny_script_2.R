@@ -4,7 +4,6 @@ library(readxl)
 library(here)
 library(lubridate)
 library(shinythemes)
-#library(basemaps)
 library(leaflet)
 library(markdown)
 library(tmap)
@@ -32,37 +31,38 @@ ggplot(data = c_sf) +
 
 #user interface:
 ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
-                 tabPanel("Map of Moorea",
-                          titlePanel("Coral Data"),
-                          sidebarLayout(
-                            sidebarPanel("put my widgets here",
-                                         radioButtons(inputId = "genus",
+  tabPanel("Map of Moorea",
+    titlePanel("Map of Moorea"),
+    ),
+  tabPanel("Spatial Distribution of Coral Samples",
+    titlePanel("Spatial Distribution of Coral Samples"),
+           leafletOutput("locations", width = "100%", height = "100%")
+    ),
+  tabPanel("Coral Plot",
+   sidebarLayout(
+    sidebarPanel("Pick A Coral",
+                 radioButtons(inputId = "genus",
                               label = "Choose Coral Species",
                               choices = c("Pocillopora" = "poc","Acropora" = "acr")
                  ),
-                 dateInput("date", label = h3("Date input"), value = "2014-01-01"),
-
                  hr(),
                  fluidRow(column(3, verbatimTextOutput("value"))
                  ),
                  selectInput(inputId = "pt_color",
                              label = "Select point color",
                              choices = c("Purple Coral" = "purple", "Orange Coral" = "orange"))
-                              ),
+    ),
     mainPanel("Length to Width Distribution by Coral Species",
               plotOutput(outputId = "coral_plot"),
               tableOutput(outputId = "coral_table"))
   )),
-  tabPanel("Spatial Distribution of Coral Samples",
-           leafletOutput("locations", width = "100%", height = "100%")),
-  tabPanel("Coral Plot"),
-  tabPanel("Info & Data Sources"),
-  # mainPanel(
-  # img(src = 'poc.jpg', align = "left", height = 200, width = 300),
-  # img(src = 'acr.jpg', align = "left", height = 200, width = 300)
-  # the rest of our code
-  # )
-)
+  tabPanel("Info & Data Sources",
+    titlePanel("Works Cited"),
+    mainPanel(
+       img(src = 'poc.jpg', align = "left", height = 200, width = 300),
+       img(src = 'acr.jpg', align = "left", height = 200, width = 300)
+  )
+))
 
 #Server function:
 server <- function(input, output) {
