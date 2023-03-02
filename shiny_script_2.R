@@ -11,6 +11,7 @@ library(sp)
 library(sf)
 library(ggspatial)
 library(janitor)
+library(ggplot2)
 
 
 
@@ -59,7 +60,7 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
                  tabPanel("Spatial Distribution of Coral Samples",
                           titlePanel("Spatial Distribution of Coral Samples"),
                           # leafletOutput("locations", width = "100%", height = "100%"),
-                          plotOutput("grid")
+                          mainPanel(plotOutput("grid"))
 
                  ),
                  tabPanel("Coral Plot",
@@ -113,7 +114,9 @@ server <- function(input, output) {
       annotation_scale(
         location = "bl",
         width_hint = 0.2
-      )
+      ) +
+      geom_point(data = coral_raw,
+        aes(x = lat, y = long, color = genus))
   })
 
   # tab2 spatial analysis
