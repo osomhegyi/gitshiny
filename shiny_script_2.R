@@ -105,6 +105,7 @@ server <- function(input, output) {
       filter(species == input$genus)
   })
 
+  ################################# HELP - how to zoom in on only moorea
   # tab1 map
   output$map <- renderPlot({
     ggplot(data=fp)+
@@ -125,6 +126,7 @@ server <- function(input, output) {
       # addProviderTiles(providers$Esri.WorldStreetMap)
   # })
 
+  ################################ HELP - error: object object
   # grimes help for tab2
   makefiver <- reactive({
 
