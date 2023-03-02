@@ -25,44 +25,60 @@ coordinates <- coral_raw %>%
 c_sf <- coordinates %>%
   st_as_sf(coords = c("long", "lat"), crs = 4326)
 
+fp <- read_sf(here::here("data","moorea.shp")) %>%
+  filter(hasc_1=="PF.WI") %>%
+  select(name_0,varname_1,geometry)
+
+
 # Moorea LETR to find map shapefile
 ggplot(data = c_sf) +
   geom_sf()
 
 #user interface:
 ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
-  tabPanel("Map of Moorea",
-    titlePanel("Map of Moorea"),
-    ),
-  tabPanel("Spatial Distribution of Coral Samples",
-    titlePanel("Spatial Distribution of Coral Samples"),
-           leafletOutput("locations", width = "100%", height = "100%")
-    ),
-  tabPanel("Coral Plot",
-   sidebarLayout(
-    sidebarPanel("Pick A Coral",
-                 radioButtons(inputId = "genus",
-                              label = "Choose Coral Species",
-                              choices = c("Pocillopora" = "poc","Acropora" = "acr")
+                 tabPanel("Map of Moorea",
+                          titlePanel("Map of Moorea"),
+
                  ),
-                 hr(),
-                 fluidRow(column(3, verbatimTextOutput("value"))
+                 tabPanel("Spatial Distribution of Coral Samples",
+                          titlePanel("Spatial Distribution of Coral Samples"),
+                          leafletOutput("locations", width = "100%", height = "100%")
                  ),
-                 selectInput(inputId = "pt_color",
-                             label = "Select point color",
-                             choices = c("Purple Coral" = "purple", "Orange Coral" = "orange"))
-    ),
-    mainPanel("Length to Width Distribution by Coral Species",
-              plotOutput(outputId = "coral_plot"),
-              tableOutput(outputId = "coral_table"))
-  )),
-  tabPanel("Info & Data Sources",
-    titlePanel("Works Cited"),
-    mainPanel(
-       img(src = 'poc.jpg', align = "left", height = 200, width = 300),
-       img(src = 'acr.jpg', align = "left", height = 200, width = 300)
-  )
-))
+                 tabPanel("Coral Plot",
+                          sidebarLayout(
+                            sidebarPanel("Pick A Coral",
+                                         radioButtons(inputId = "genus",
+                                                      label = "Choose Coral Species",
+                                                      choices = c("Pocillopora" = "poc","Acropora" = "acr")
+                                         ),
+                                         hr(),
+                                         fluidRow(column(3, verbatimTextOutput("value"))
+                                         ),
+                                         selectInput(inputId = "pt_color",
+                                                     label = "Select point color",
+                                                     choices = c("Purple Coral" = "purple", "Orange Coral" = "orange"))
+                            ),
+                            mainPanel("Length to Width Distribution by Coral Species",
+                                      plotOutput(outputId = "coral_plot"),
+                                      tableOutput(outputId = "coral_table"))
+                          )),
+                 tabPanel("Info & Data Sources",
+                          titlePanel("Works Cited"),
+                          fluidRow(column(tags$img(src="poc.jpg",width="200px",height="300px"), width=2),
+
+                                   br(),
+                                   column(tags$img(src = "acr.jpg",width = "200px",height="300px"), width=2),
+                                   br(),
+                                   column(
+                                     br(),
+                                     p("INFO ABOUT CORAL",style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                                     br(),
+
+                                     p("INFO ABOUT DATA",style="text-align:justify;color:black;background-color:papayawhip;padding:15px;border-radius:10px"),
+
+                                     width=8),
+                          )
+                 ))
 
 #Server function:
 server <- function(input, output) {
@@ -106,12 +122,7 @@ server <- function(input, output) {
 
 
 
-#sliderInput(inputId = "perc_bleach",
-            #label = "Percent Bleached", min = 0, max = 100, value =50, step = NULL,
-            #round = FALSE, format = "#,##0.#####",
-            #locale = "us", ticks = TRUE, animate = FALSE)
-#output$coral_slider <- renderPrint ({ input$perc_bleach})
-#textOutput('perc_bleach')
+
 
 
 
