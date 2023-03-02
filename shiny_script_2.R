@@ -10,34 +10,44 @@ library(tmap)
 library(sp)
 library(sf)
 library(ggspatial)
+library(janitor)
 
 
 
-# Read in data?
+# Read in data
 coral_raw <- read_excel(here("data", "coral_data.xls")) %>%
-  janitor::clean_names() %>%
   mutate(
     area = length*width
   )
-# Data wrangling
+
+# Making genus column all lowercase (but there is still a ? in one of the cells - need to fix)
+coral_raw$genus <- tolower(coral_raw$genus)
+
+
+# Wrangle the coordinates for tab1
 coordinates <- coral_raw %>%
   select('lat', 'long', 'genus')
 
-coral_raw %>%
-  group_by(site, plot, genus, quadrat) %>%
-  summarize((q_count=n()))
-
+# This is for our map in tab1
 c_sf <- coordinates %>%
   st_as_sf(coords = c("long", "lat"), crs = 4326)
 
+# This is our base map for tab1
 fp <- read_sf(here::here("data","moorea.shp")) %>%
   filter(hasc_1=="PF.WI") %>%
   select(name_0,varname_1,geometry)
+
+# This is for our spatial analysis for tab2
+coral_grid <- coral_raw %>%
+  group_by(site, plot, genus, quadrat) %>%
+  summarize((q_count=n()))
 
 
 # Moorea LETR to find map shapefile
 ggplot(data = c_sf) +
   geom_sf()
+
+
 
 #user interface:
 ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
@@ -48,7 +58,9 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
                  ),
                  tabPanel("Spatial Distribution of Coral Samples",
                           titlePanel("Spatial Distribution of Coral Samples"),
-                          leafletOutput("locations", width = "100%", height = "100%")
+                          # leafletOutput("locations", width = "100%", height = "100%"),
+                          plotOutput("grid")
+
                  ),
                  tabPanel("Coral Plot",
                           sidebarLayout(
@@ -104,13 +116,60 @@ server <- function(input, output) {
       )
   })
 
-  # tab 2 spatial analysis
-  output$locations <- renderLeaflet({
-    leaflet(data = coordinates) %>%
-      addTiles() %>%
-      addMarkers("long" =~LONGITUDE, "lat" =~LATITUDE) %>%
-      addProviderTiles(providers$Esri.WorldStreetMap)
+  # tab2 spatial analysis
+   # output$locations <- renderLeaflet({
+    # leaflet(data = coordinates) %>%
+      # addTiles() %>%
+      # addMarkers("long" =~LONGITUDE, "lat" =~LATITUDE) %>%
+      # addProviderTiles(providers$Esri.WorldStreetMap)
+  # })
+
+  # grimes help for tab2
+  makefiver <- reactive({
+
+    data <- coral_grid %>%
+      filter(site == input$site_select) %>%
+      filter(genus = input$species_select) %>%
+      filter(plot = input$plot_select)
+
+    vec<-unique(data$quadrat)
+
+    # Make an empty 25
+    quad_vec<-rep(0,length.out = 25)
+
+    # Sub in number of each counts
+    quad_vec[vec]<-data$q_count=n()
+
+    names(quad_vec)<-paste('X',1:25)
+
+    # Make into a 5x5 grid
+    quad_mat<-matrix(quad_vec,nrow=5,ncol=5)
+
+    # Convert to tibble for grid
+    quad_tibble <-
+      quad_mat %>%
+      as_tibble() %>%
+      rownames_to_column("Var1") %>%
+      pivot_longer(-Var1, names_to = "Var2", values_to = "value") %>%
+      mutate(
+        Var1 = factor(Var1, levels = 1:10),
+        Var2 = factor(gsub("V", "", Var2), levels = 1:10)
+      )
+
+    return(quad_tibble)
+
   })
+
+  # Make an output from the plots
+  output$grid <- renderPlot({
+
+    ggplot(makefiver(), aes(Var1, Var2)) +
+      geom_tile(aes(fill = value)) +
+      geom_text(aes(label = value)) +
+      scale_fill_gradient(low = "white", high = "red")
+
+  })
+
 
   # tab 3 table
   coral_table <- reactive({
