@@ -9,6 +9,7 @@ library(markdown)
 library(tmap)
 library(sp)
 library(sf)
+library(ggspatial)
 
 
 
@@ -21,6 +22,10 @@ coral_raw <- read_excel(here("data", "coral_data.xls")) %>%
 # Data wrangling
 coordinates <- coral_raw %>%
   select('lat', 'long', 'genus')
+
+coral_raw %>%
+  group_by(site, plot, genus, quadrat) %>%
+  summarize((q_count=n()))
 
 c_sf <- coordinates %>%
   st_as_sf(coords = c("long", "lat"), crs = 4326)
@@ -38,6 +43,7 @@ ggplot(data = c_sf) +
 ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
                  tabPanel("Map of Moorea",
                           titlePanel("Map of Moorea"),
+                          mainPanel(plotOutput("map"))
 
                  ),
                  tabPanel("Spatial Distribution of Coral Samples",
@@ -87,6 +93,18 @@ server <- function(input, output) {
       filter(species == input$genus)
   })
 
+# tab1 map
+  output$map <- renderPlot({
+    ggplot(data=fp)+
+    geom_sf()+
+    coord_sf(xlim=c(-149.70,-149.95),ylim=c(-17.42,-17.62))+
+    annotation_scale(
+      location = "bl",
+      width_hint = 0.2
+    )
+    })
+
+  # tab 3 stuff
   coral_table <- reactive({
     coral_raw %>%
       filter(genus == input$genus) %>%
