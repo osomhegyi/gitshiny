@@ -17,9 +17,8 @@ library(ggplot2)
 
 # Read in data
 coral_raw <- read_excel(here("data", "coral_data.xls")) %>%
-  mutate(
-    area = length*width
-  )
+  mutate(area = length*width)
+
 
 # Making genus column all lowercase (but there is still a ? in one of the cells - need to fix)
 coral_raw$genus <- tolower(coral_raw$genus)
@@ -115,8 +114,7 @@ server <- function(input, output) {
         location = "bl",
         width_hint = 0.2
       ) +
-      geom_point(data = coral_raw,
-        aes(x = lat, y = long, color = genus))
+      geom_sf(data = c_sf, aes(color = genus))
   })
 
   # tab2 spatial analysis
