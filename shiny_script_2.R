@@ -70,17 +70,17 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
                           )),
                  tabPanel("Info & Data Sources",
                           titlePanel("Works Cited"),
-                          fluidRow(column(tags$img(src="poc.jpg",width="200px",height="300px"), width=2),
-
+                          fluidRow(column(tags$img(src="poc.jpg",width="300px",height="200px"), width=5),
                                    br(),
-                                   column(tags$img(src = "acr.jpg",width = "200px",height="300px"), width=2),
+                                   column(tags$img(src = "acr.jpg",width = "300px",height="200px"), width=5),
                                    br(),
                                    column(
                                      br(),
-                                     p("INFO ABOUT CORAL",style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
                                      br(),
-
-                                     p("INFO ABOUT DATA",style="text-align:justify;color:black;background-color:papayawhip;padding:15px;border-radius:10px"),
+                                     p("INFO ABOUT CORAL - La la la, here is some info about Moorea and coral!",style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                                     br(),
+                                     br(),
+                                     p("INFO ABOUT DATA - Woooo data citation!",style="text-align:justify;color:black;background-color:papayawhip;padding:15px;border-radius:10px"),
 
                                      width=8),
                           )
@@ -93,18 +93,26 @@ server <- function(input, output) {
       filter(species == input$genus)
   })
 
-# tab1 map
+  # tab1 map
   output$map <- renderPlot({
     ggplot(data=fp)+
-    geom_sf()+
-    coord_sf(xlim=c(-149.70,-149.95),ylim=c(-17.42,-17.62))+
-    annotation_scale(
-      location = "bl",
-      width_hint = 0.2
-    )
-    })
+      geom_sf()+
+      coord_sf(xlim=c(-149.70,-149.95),ylim=c(-17.42,-17.62))+
+      annotation_scale(
+        location = "bl",
+        width_hint = 0.2
+      )
+  })
 
-  # tab 3 stuff
+  # tab 2 spatial analysis
+  output$locations <- renderLeaflet({
+    leaflet(data = coordinates) %>%
+      addTiles() %>%
+      addMarkers("long" =~LONGITUDE, "lat" =~LATITUDE) %>%
+      addProviderTiles(providers$Esri.WorldStreetMap)
+  })
+
+  # tab 3 table
   coral_table <- reactive({
     coral_raw %>%
       filter(genus == input$genus) %>%
@@ -117,25 +125,17 @@ server <- function(input, output) {
         mean_perc_bleached = mean(perc_bleach)
       )
   })
-
-  output$value <- renderPrint ({ input$date })
-
-  output$coral_plot <- renderPlot({
-
-    ggplot(data = coral_raw, aes(x = length, y = width)) +
-      geom_point(color = input$pt_color)
-  })
-
+  # tab 3 table
   output$coral_table <- renderTable({
     coral_table()
   })
 
-  output$locations <- renderLeaflet({
-    leaflet(data = coordinates) %>%
-      addTiles() %>%
-      addMarkers("long" =~LONGITUDE, "lat" =~LATITUDE) %>%
-      addProviderTiles(providers$Esri.WorldStreetMap)
+  # tab 3 plot
+  output$coral_plot <- renderPlot({
+    ggplot(data = coral_raw, aes(x = length, y = width)) +
+      geom_point(color = input$pt_color)
   })
+
 }
 
 
