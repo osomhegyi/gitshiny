@@ -115,7 +115,8 @@ server <- function(input, output) {
         location = "bl",
         width_hint = 0.2
       ) +
-      geom_sf(data = c_sf, aes(color = genus))
+      geom_sf(data = c_sf, aes(color = genus))+
+      coord_sf(xlim=c(-149.70,-149.95),ylim=c(-17.42,-17.62))
   })
 
   # tab2 spatial analysis
