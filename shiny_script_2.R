@@ -50,7 +50,7 @@ ggplot(data = c_sf) +
 
 
 #user interface:
-ui <- navbarPage("Moorea Corals", theme = shinytheme("superhero"),
+ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                  tabPanel("Map of Moorea",
                           titlePanel("Map of Moorea"),
                           mainPanel(plotOutput("map"))
@@ -105,11 +105,12 @@ server <- function(input, output) {
       filter(species == input$genus)
   })
 
-  ################################# HELP - how to zoom in on only moorea
+
   # tab1 map
   output$map <- renderPlot({
     ggplot(data=fp)+
       geom_sf()+
+      theme_minimal() +
       coord_sf(xlim=c(-149.70,-149.95),ylim=c(-17.42,-17.62))+
       annotation_scale(
         location = "bl",
