@@ -102,10 +102,10 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                                    column(
                                      br(),
                                      br(),
-                                     p("INFO ABOUT CORAL - La la la, here is some info about Moorea and coral!",style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                                     p("INFO ABOUT CORAL - These corals are reef builders, coral reefs are home to 25% of oceanic life, climate change is affecting this, island of moorea is a long-term coral monitering site, etc.",style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
                                      br(),
                                      br(),
-                                     p("INFO ABOUT DATA - Woooo data citation!",style="text-align:justify;color:black;background-color:papayawhip;padding:15px;border-radius:10px"),
+                                     p("INFO ABOUT DATA - Collected between July 1 2022 and August 26 2022",style="text-align:justify;color:black;background-color:papayawhip;padding:15px;border-radius:10px"),
 
                                      width=8),
                           )
@@ -141,7 +141,6 @@ server <- function(input, output) {
       # addProviderTiles(providers$Esri.WorldStreetMap)
   # })
 
-  ################################ HELP - error: object object
   # grimes help for tab2
   makefiver <- reactive({
 
