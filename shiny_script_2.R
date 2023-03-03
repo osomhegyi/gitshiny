@@ -40,7 +40,7 @@ fp <- read_sf(here::here("data","moorea.shp")) %>%
 # This is for our spatial analysis for tab2
 coral_grid <- coral_raw %>%
   group_by(site, plot, genus, quadrat) %>%
-  summarize((q_count=n()))
+  summarize(q_count=n())
 
 
 # Moorea LETR to find map shapefile
@@ -59,8 +59,21 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                  tabPanel("Spatial Distribution of Coral Samples",
                           titlePanel("Spatial Distribution of Coral Samples"),
                           # leafletOutput("locations", width = "100%", height = "100%"),
+                          sidebarLayout(
+                            sidebarPanel("Selector",
+                                         radioButtons(inputId = "plot_select",
+                                                      label = "Plot Number",
+                                                      choices = unique(coral_grid$plot)),
+                                         radioButtons(inputId = "genus_select",
+                                                      label = "Species",
+                                                      choices = c("Pocillopora" = "poc","Acropora" = "acr")),
+                                         radioButtons(inputId = "site_select",
+                                                      label = "Site Number",
+                                                      choices = unique(coral_grid$site))
+                          ),
                           mainPanel(plotOutput("grid"))
 
+                  )
                  ),
                  tabPanel("Coral Plot",
                           sidebarLayout(
@@ -134,8 +147,8 @@ server <- function(input, output) {
 
     data <- coral_grid %>%
       filter(site == input$site_select) %>%
-      filter(genus = input$species_select) %>%
-      filter(plot = input$plot_select)
+      filter(genus == input$genus_select) %>%
+      filter(plot == input$plot_select)
 
     vec<-unique(data$quadrat)
 
@@ -143,7 +156,7 @@ server <- function(input, output) {
     quad_vec<-rep(0,length.out = 25)
 
     # Sub in number of each counts
-    quad_vec[vec]<-data$q_count=n()
+    quad_vec[vec]<-data$q_count
 
     names(quad_vec)<-paste('X',1:25)
 
@@ -160,6 +173,7 @@ server <- function(input, output) {
         Var1 = factor(Var1, levels = 1:10),
         Var2 = factor(gsub("V", "", Var2), levels = 1:10)
       )
+
 
     return(quad_tibble)
 
