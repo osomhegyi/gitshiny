@@ -61,15 +61,17 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                           # leafletOutput("locations", width = "100%", height = "100%"),
                           sidebarLayout(
                             sidebarPanel("Selector",
-                                         radioButtons(inputId = "plot_select",
-                                                      label = "Plot Number",
-                                                      choices = unique(coral_grid$plot)),
                                          radioButtons(inputId = "genus_select",
                                                       label = "Species",
                                                       choices = c("Pocillopora" = "poc","Acropora" = "acr")),
-                                         radioButtons(inputId = "site_select",
-                                                      label = "Site Number",
-                                                      choices = unique(coral_grid$site))
+                                         selectInput(inputId = "site_select",
+                                                     label = h3("Site Number"),
+                                                     choices = unique(coral_grid$site),
+                                                     selected = 1),
+                                         selectInput(inputId = "plot_select",
+                                                      label = h3("Plot Number"),
+                                                      choices = unique(coral_grid$plot),
+                                                     selected = 1)
                             ),
                             mainPanel(plotOutput("grid"))
 
