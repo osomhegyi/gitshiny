@@ -19,6 +19,21 @@ library(ggplot2)
 coral_raw <- read_excel(here("data", "coral_data.xls")) %>%
   mutate(area = length*width)
 
+class(coral_raw$genus)
+
+
+
+
+###drop na code will not run (when running app) will run individually with no errors
+
+##na_strings <- c("acr?", "poc?", "unknown")
+##coral_raw <- coral_raw %>% replace_with_na_all(condition = ~.x %in% na_strings)
+
+##coral_raw <- coral_raw %>%
+##  drop_na(genus)
+
+
+
 
 # Making genus column all lowercase (but there is still a ? in one of the cells - need to fix)
 coral_raw$genus <- tolower(coral_raw$genus)
@@ -53,14 +68,14 @@ ggplot(data = c_sf) +
 ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                  tabPanel("Map of Moorea",
                           titlePanel("Map of Moorea"),
-                          mainPanel(plotOutput("map"))
+                          mainPanel(plotOutput("map", height=850, width=850))
 
                  ),
                  tabPanel("Spatial Distribution of Coral Samples",
                           titlePanel("Spatial Distribution of Coral Samples"),
                           # leafletOutput("locations", width = "100%", height = "100%"),
                           sidebarLayout(
-                            sidebarPanel("Selector",
+                            sidebarPanel("Selector Variable",
                                          radioButtons(inputId = "genus_select",
                                                       label = "Species",
                                                       choices = c("Pocillopora" = "poc","Acropora" = "acr")),
@@ -120,7 +135,6 @@ server <- function(input, output) {
       filter(species == input$genus)
   })
 
-
   # tab1 map
   output$map <- renderPlot({
     ggplot(data=fp)+
@@ -131,7 +145,8 @@ server <- function(input, output) {
         location = "bl",
         width_hint = 0.2
       ) +
-      geom_sf(data = c_sf, aes(color = 'red'))+
+      geom_sf(data = c_sf, aes(color = 'site'))+
+      theme(legend.position = "none")+
       coord_sf(xlim=c(-149.70,-149.95),ylim=c(-17.42,-17.62))
   })
 
