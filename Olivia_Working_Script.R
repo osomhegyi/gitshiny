@@ -29,11 +29,20 @@ coral_raw$genus <- tolower(coral_raw$genus)
 
 # Wrangle the coordinates for tab1
 coordinates <- coral_raw %>%
-  select('lat', 'long', 'genus', 'site')
+  select('lat', 'long', 'genus', 'site') %>%
+  group_by(site)
+
+class(coordinates$genus) #character
+
+coordinates['coral_count'] <- 1
 
 # This is for our map in tab1
 c_sf <- coordinates %>%
   st_as_sf(coords = c("long", "lat"), crs = 4326)
+
+c_sf <- c_sf %>%
+  dplyr::summarise(total_corals_found = sum(coral_count))
+
 
 # This is our base map for tab1
 fp <- read_sf(here::here("data","moorea.shp")) %>%
@@ -72,8 +81,8 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                                                      choices = unique(coral_grid$site),
                                                      selected = 1),
                                          selectInput(inputId = "plot_select",
-                                                      label = h3("Plot Number"),
-                                                      choices = unique(coral_grid$plot),
+                                                     label = h3("Plot Number"),
+                                                     choices = unique(coral_grid$plot),
                                                      selected = 1)
                             ),
                             mainPanel(plotOutput("grid"))
@@ -133,13 +142,13 @@ server <- function(input, output) {
         location = "bl",
         width_hint = 0.2
       ) +
-      geom_sf(data = c_sf, aes(color = site))+
+      geom_sf(data = c_sf, aes(color = site, label=total_corals_found))+
       theme(legend.position = "none")+
       coord_sf(xlim=c(-149.70,-149.95),ylim=c(-17.42,-17.62))
   })
 
-### Casey's notes from OH for Moorea Map: when can add hover labels (once we update data) and say: color = site, label = genus, poc, acr
-### On our hover labels we could show: plot number, number of acr and poc found at each site, northing/easting (if this makes sense?)
+  ### Casey's notes from OH for Moorea Map: when can add hover labels (once we update data) and say: color = site, label = genus, poc, acr
+  ### On our hover labels we could show: plot number, number of acr and poc found at each site, northing/easting (if this makes sense?)
 
 
 

@@ -12,13 +12,16 @@ library(sf)
 library(ggspatial)
 library(janitor)
 library(ggplot2)
+library(plotly)
 
 
 
 # Read in data
 coral_raw <- read_excel(here("data", "coral_data.xls")) %>%
-  mutate(area = length*width)
-
+  mutate(area = length*width) %>%
+  filter(genus != "poc?") %>%
+  filter(genus != "acr?") %>%
+  filter(genus != "unknown")
 
 # Making genus column all lowercase (but there is still a ? in one of the cells - need to fix)
 coral_raw$genus <- tolower(coral_raw$genus)
@@ -26,7 +29,7 @@ coral_raw$genus <- tolower(coral_raw$genus)
 
 # Wrangle the coordinates for tab1
 coordinates <- coral_raw %>%
-  select('lat', 'long', 'genus')
+  select('lat', 'long', 'genus', 'site')
 
 # This is for our map in tab1
 c_sf <- coordinates %>%
@@ -53,27 +56,29 @@ ggplot(data = c_sf) +
 ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                  tabPanel("Map of Moorea",
                           titlePanel("Map of Moorea"),
-                          mainPanel(plotOutput("map"))
+                          mainPanel(plotlyOutput("map", height=850, width=850))
 
                  ),
                  tabPanel("Spatial Distribution of Coral Samples",
                           titlePanel("Spatial Distribution of Coral Samples"),
                           # leafletOutput("locations", width = "100%", height = "100%"),
                           sidebarLayout(
-                            sidebarPanel("Selector",
-                                         radioButtons(inputId = "plot_select",
-                                                      label = "Plot Number",
-                                                      choices = unique(coral_grid$plot)),
+                            sidebarPanel("Selector Variable",
                                          radioButtons(inputId = "genus_select",
                                                       label = "Species",
                                                       choices = c("Pocillopora" = "poc","Acropora" = "acr")),
-                                         radioButtons(inputId = "site_select",
-                                                      label = "Site Number",
-                                                      choices = unique(coral_grid$site))
-                          ),
-                          mainPanel(plotOutput("grid"))
+                                         selectInput(inputId = "site_select",
+                                                     label = h3("Site Number"),
+                                                     choices = unique(coral_grid$site),
+                                                     selected = 1),
+                                         selectInput(inputId = "plot_select",
+                                                     label = h3("Plot Number"),
+                                                     choices = unique(coral_grid$plot),
+                                                     selected = 1)
+                            ),
+                            mainPanel(plotOutput("grid"))
 
-                  )
+                          )
                  ),
                  tabPanel("Coral Plot",
                           sidebarLayout(
@@ -118,9 +123,8 @@ server <- function(input, output) {
       filter(species == input$genus)
   })
 
-
   # tab1 map
-  output$map <- renderPlot({
+  output$map <- renderPlotly({
     ggplot(data=fp)+
       geom_sf()+
       theme_minimal() +
@@ -129,16 +133,23 @@ server <- function(input, output) {
         location = "bl",
         width_hint = 0.2
       ) +
-      geom_sf(data = c_sf, aes(color = genus))+
+      geom_sf(data = c_sf, aes(color = site))+
+      theme(legend.position = "none")+
       coord_sf(xlim=c(-149.70,-149.95),ylim=c(-17.42,-17.62))
   })
 
+  ### Casey's notes from OH for Moorea Map: when can add hover labels (once we update data) and say: color = site, label = genus, poc, acr
+  ### On our hover labels we could show: plot number, number of acr and poc found at each site, northing/easting (if this makes sense?)
+
+
+
+
   # tab2 spatial analysis
-   # output$locations <- renderLeaflet({
-    # leaflet(data = coordinates) %>%
-      # addTiles() %>%
-      # addMarkers("long" =~LONGITUDE, "lat" =~LATITUDE) %>%
-      # addProviderTiles(providers$Esri.WorldStreetMap)
+  # output$locations <- renderLeaflet({
+  # leaflet(data = coordinates) %>%
+  # addTiles() %>%
+  # addMarkers("long" =~LONGITUDE, "lat" =~LATITUDE) %>%
+  # addProviderTiles(providers$Esri.WorldStreetMap)
   # })
 
   # grimes help for tab2
@@ -226,4 +237,3 @@ server <- function(input, output) {
 
 #Combine above into an app:
 shinyApp(ui = ui, server = server)
-
