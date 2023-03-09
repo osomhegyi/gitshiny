@@ -64,8 +64,17 @@ ggplot(data = c_sf) +
 #user interface:
 ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                  tabPanel("Map of Moorea",
-                          titlePanel("Map of Moorea"),
-                          mainPanel(plotlyOutput("map", height=850, width=850))
+                          titlePanel("Moorea, French Polynesia"),
+                          mainPanel(fluidRow(
+                            column(
+                              em("This map respresents 12 sites in the Northshore Lagoon of
+                                      the Moorea Coral Reef Long-term Ecological Research (MCR LTER) site"),
+                              width = 12),
+                            br(),
+                            br(),
+                            plotlyOutput("map", height=650, width=650)
+                          )),
+
 
                  ),
                  tabPanel("Spatial Distribution of Coral Samples",
@@ -85,9 +94,9 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                                                      choices = unique(coral_grid$plot),
                                                      selected = 1)
                             ),
-                            mainPanel(plotOutput("grid"))
-
-                          )
+                            mainPanel(plotOutput("grid")
+                            ),
+                          ),
                  ),
                  tabPanel("Coral Plot",
                           sidebarLayout(
@@ -107,23 +116,29 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                                       ##plotOutput(outputId = "coral_plot"),
                                       DT::dataTableOutput(outputId = "coral_table"))
                           )),
-                 tabPanel("Info & Data Sources",
-                          titlePanel("Works Cited"),
-                          fluidRow(column(tags$img(src="poc.jpg",width="300px",height="200px"), width=5),
-                                   br(),
-                                   column(tags$img(src = "acr.jpg",width = "300px",height="200px"), width=5),
-                                   br(),
-                                   column(
-                                     br(),
-                                     br(),
-                                     p("INFO ABOUT CORAL - These corals are reef builders, coral reefs are home to 25% of oceanic life, climate change is affecting this, island of moorea is a long-term coral monitering site, etc.",style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
-                                     br(),
-                                     br(),
-                                     p("INFO ABOUT DATA - Collected between July 1 2022 and August 26 2022",style="text-align:justify;color:black;background-color:papayawhip;padding:15px;border-radius:10px"),
 
-                                     width=8),
+                 tabPanel("Info & Data Sources",
+                          titlePanel("About"),
+                          fluidRow(
+                            tags$img(src="divers.jpg",width="800px",height="500px"),
+                            width = 12,
+                            align = "left"),
+                          em("Researchers at the Moorea Coral Reef Long-term Ecological Research (LTER) site", align = "center"),
+                          column(
+                            br(),
+                            br(),
+                            p("Coral reefs are among the most diverse and productive ecosystems on Earth.
+                              The Moorea Coral Reef Long-term Ecological Research (MCR LTER) site was established
+                              by the National Science Foundation in 2004 as a model system to better understand
+                              factors that mediate coral community structure and function.This app seeks to visualize
+                              data collected in the Moorea Northshore Lagoon by LTER researcher and PhD student
+                              Olivia Isbell from 7/1/22 - 8/26/22 to help researchers understand if there are any
+                              spatial patterns surveyed or corals Acropora and Pocilopora, either random or clustered."),
+                            width = 12,
+                            align = "left"
                           )
                  ))
+
 
 #Server function:
 server <- function(input, output) {
