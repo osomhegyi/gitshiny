@@ -91,21 +91,21 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                  ),
                  tabPanel("Coral Plot",
                           sidebarLayout(
-                            sidebarPanel("Pick A Coral",
-                                         radioButtons(inputId = "genus",
-                                                      label = "Choose Coral Species",
-                                                      choices = c("Pocillopora" = "poc","Acropora" = "acr")
-                                         ),
-                                         hr(),
-                                         fluidRow(column(3, verbatimTextOutput("value"))
-                                         ),
-                                         selectInput(inputId = "pt_color",
-                                                     label = "Select point color",
-                                                     choices = c("Purple Coral" = "purple", "Orange Coral" = "orange"))
+                            sidebarPanel(
+                              radioButtons(inputId = "genus",
+                                           label = "Select Coral Species",
+                                           choices = c("Pocillopora" = "poc","Acropora" = "acr")
+                              ),
+                              hr(),
+                              fluidRow(column(3, verbatimTextOutput("value"))
+                              )##,
+                              ##selectInput(inputId = "pt_color",
+                              ##label = "Select point color",
+                              ##choices = c("Purple Coral" = "purple", "Orange Coral" = "orange"))
                             ),
-                            mainPanel("Length to Width Distribution by Coral Species",
-                                      plotOutput(outputId = "coral_plot"),
-                                      tableOutput(outputId = "coral_table"))
+                            mainPanel("Coral Details",
+                                      ##plotOutput(outputId = "coral_plot"),
+                                      DT::dataTableOutput(outputId = "coral_table"))
                           )),
                  tabPanel("Info & Data Sources",
                           titlePanel("Works Cited"),
@@ -204,7 +204,8 @@ server <- function(input, output) {
     ggplot(makefiver(), aes(Var1, Var2)) +
       geom_tile(aes(fill = value)) +
       geom_text(aes(label = value)) +
-      scale_fill_gradient(low = "white", high = "red")
+      scale_fill_gradient(low = "white", high = "red") +
+      theme_void()
 
   })
 
@@ -215,17 +216,20 @@ server <- function(input, output) {
       filter(genus == input$genus) %>%
       group_by(site) %>%
       summarize(
-        #mean_length = mean(length),
-        #mean_width = mean(width),
+        mean_length = mean(length),
+        mean_width = mean(width),
         mean_area = mean(area),
         mean_perc_dead = mean(perc_dead),
-        mean_perc_bleached = mean(perc_bleach)
+        mean_perc_bleached = mean(perc_bleach),
       )
   })
   # tab 3 table
-  output$coral_table <- renderTable({
-    coral_table()
+  output$coral_table <- DT::renderDataTable({
+    coral_table() #%>%
+    #formatRound(columns = c(3:9), digits = 2)
   })
+
+  ### 3/8 Notes: Need to round to 2 decimals, need to adjust page layout so that "select species" box is smaller.
 
   # tab 3 plot
   output$coral_plot <- renderPlot({
