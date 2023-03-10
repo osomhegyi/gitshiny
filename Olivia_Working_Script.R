@@ -183,14 +183,14 @@ server <- function(input, output) {
 
 
 
-###test colors
+  ###test colors
 
-##species_color <- reactive({
-##  color_list %>%
-##    pluck(input$genus_select)
-##})
+  ##species_color <- reactive({
+  ##  color_list %>%
+  ##    pluck(input$genus_select)
+  ##})
 
- ###stop test colors
+  ###stop test colors
 
 
   # grimes help for tab2
