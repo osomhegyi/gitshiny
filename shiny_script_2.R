@@ -63,38 +63,54 @@ ggplot(data = c_sf) +
 
 #user interface:
 ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
-                 tabPanel("Map of Moorea",
+                 tabPanel("Overview",
                           titlePanel("Moorea, French Polynesia"),
-                          mainPanel(fluidRow(
+                          fluidRow(
                             column(
-                              em("This map respresents 12 sites in the Northshore Lagoon of
-                                      the Moorea Coral Reef Long-term Ecological Research (MCR LTER) site"),
-                              width = 12),
+                              h4("Project Overview"),
+                              p("This app seeks to visualize data collected in the Moorea Coral Reef Long-term Ecological
+                                Research (MCR LTER) site to help to understand if there are any spatial patterns surveyed
+                                of coral species Acropora and Pocilopora, either random or clustered. The map below respresents
+                                16 sites in the Northshore Lagoon of the MCR LTER."),
+                              width = 12,
+                              align = "left"),
                             br(),
                             br(),
-                            plotlyOutput("map", height=650, width=650)
-                          )),
-
-
+                            br(),
+                            br(),
+                            br(),
+                            plotlyOutput("map", height=850, width=850)
+                          )
                  ),
                  tabPanel("Spatial Distribution of Coral Samples",
                           titlePanel("Spatial Distribution of Coral Samples"),
-                          # leafletOutput("locations", width = "100%", height = "100%"),
-                          sidebarLayout(
-                            sidebarPanel("Select Variable:",
-                                         radioButtons(inputId = "genus_select",
-                                                      label = h3("Species"),
-                                                      choices = c("Pocillopora" = "poc","Acropora" = "acr")),
-                                         selectInput(inputId = "site_select",
-                                                     label = h3("Site Number"),
-                                                     choices = unique(coral_grid$site),
-                                                     selected = 1),
-                                         selectInput(inputId = "plot_select",
-                                                     label = h3("Plot Number"),
-                                                     choices = unique(coral_grid$plot),
-                                                     selected = 1)
+                          fluidRow(
+                            column(
+                              p("Data was collected for coral species Acropora and Pocilopora from 16 sites, where
+                                five transects of 5x5 meter plots were sampled. Each plot contains 25 1x1 m quadrats."),
+                              width = 12,
+                              align = "left",
+                              style = "font-si8pt",
+                              br(),
+                              br(),
                             ),
-                            mainPanel(plotOutput("grid")
+                            # leafletOutput("locations", width = "100%", height = "100%"),
+                            sidebarLayout(
+                              sidebarPanel("Select Variable:",
+                                           radioButtons(inputId = "genus_select",
+                                                        label = h3("Species"),
+                                                        choices = c("Pocillopora" = "poc","Acropora" = "acr")),
+                                           selectInput(inputId = "site_select",
+                                                       label = h3("Site Number"),
+                                                       choices = unique(coral_grid$site),
+                                                       selected = 1),
+                                           selectInput(inputId = "plot_select",
+                                                       label = h3("Plot Number"),
+                                                       choices = unique(coral_grid$plot),
+                                                       selected = 1)
+                              ),
+                              mainPanel(plotOutput("grid")
+                              ),
                             ),
                           ),
                  ),
@@ -120,24 +136,48 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                  tabPanel("Info & Data Sources",
                           titlePanel("About"),
                           fluidRow(
-                            tags$img(src="divers.jpg",width="800px",height="500px"),
-                            width = 12,
-                            align = "left"),
-                          em("Researchers at the Moorea Coral Reef Long-term Ecological Research (LTER) site", align = "center"),
-                          column(
-                            br(),
-                            br(),
-                            p("Coral reefs are among the most diverse and productive ecosystems on Earth.
-                              The Moorea Coral Reef Long-term Ecological Research (MCR LTER) site was established
-                              by the National Science Foundation in 2004 as a model system to better understand
-                              factors that mediate coral community structure and function.This app seeks to visualize
-                              data collected in the Moorea Northshore Lagoon by LTER researcher and PhD student
-                              Olivia Isbell from 7/1/22 - 8/26/22 to help researchers understand if there are any
-                              spatial patterns surveyed or corals Acropora and Pocilopora, either random or clustered."),
-                            width = 12,
-                            align = "left"
+                            column(
+                              p("Coral reefs are among the most diverse and productive ecosystems on Earth.
+                                The Moorea Coral Reef Long-term Ecological Research (MCR LTER) site was established
+                                by the National Science Foundation in 2004 as a model system to better understand
+                                factors that mediate coral community structure and function."),
+                              tags$img(src="divers.jpg",width="800px",height="500px"),
+                              width = 12,
+                              align = "left"),
+                            em("Researchers at the Moorea Coral Reef Long-term Ecological Research"),
+                            tags$a(href="http://mcr.lternet.edu/about/overview",
+                                   "(LTER)"),
+                            em("site"),
+                            column(
+                              br(),
+                              br(),
+                              strong("Data collection:"),
+                              br(),
+                              em("Data for this project was collected at the MCR LTER site from 7/1/22 - 8/26/22.
+                                 Data was collected for coral species Acropora and Pocilopora from 16 sites,where
+                                 five transects of 5x5 meter plots were sampled. Each plot contains 25 1x1 m quadrats."),
+                              width = 12,
+                              align = "left",
+                              br(),
+                              br(),
+                              strong("Created by:"),
+                              br(),
+                              em("Olivia Somheygi & Jenna Anderson"),
+                              br(),
+                              br(),
+                              strong("Acklowledgments:"),
+                              br(),
+                              em("All data included in this app is collected and managed by"),
+                              tags$a(href="https://bren.ucsb.edu/people/olivia-isbell",
+                                     "Olivia Isbell,"), em("a PhD student at the Bren School of
+                                                           Environmental Science & Managment and researcher at MCR LTER."),
+                              br(),
+                              br(),
+                              em("Special thanks to NGGGGGGGrimes and Casey."),
+                              br()),
                           )
-                 ))
+                 )
+)
 
 
 #Server function:
