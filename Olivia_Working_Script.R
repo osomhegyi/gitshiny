@@ -108,17 +108,19 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                             sidebarPanel(
                               radioButtons(inputId = "genus",
                                            label = "Select Coral Species",
-                                           choices = c("Pocillopora" = "poc","Acropora" = "acr")
-                              ),
+                                           choices = c("Pocillopora" = "poc","Acropora" = "acr")),
                               hr(),
-                              fluidRow(column(3, verbatimTextOutput("value"))
-                              )##,
-                              ##selectInput(inputId = "pt_color",
-                              ##label = "Select point color",
-                              ##choices = c("Purple Coral" = "purple", "Orange Coral" = "orange"))
-                            ),
+                              fluidRow(column(3, verbatimTextOutput("value"))),
+                              ##),
+                              #selectInput(inputId = "pt_color",
+                              #label = "Select point color",
+                              #choices = c("Purple Coral" = "purple", "Orange Coral" = "orange"))
+                              #),
+                              ##radioButtons(inputId = "perc_dead",
+                                         ##label = ("Dead?"),
+                                         ##choices = c("Yes" = "100","No" = "0")),
                             mainPanel("Coral Details",
-                                      ##plotOutput(outputId = "coral_plot"),
+                                      plotOutput(outputId = "coral_plot"),
                                       DT::dataTableOutput(outputId = "coral_table"))
                           )),
 
@@ -142,7 +144,7 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                             width = 12,
                             align = "left"
                           )
-                 ))
+                 )))
 
 
 #Server function:
@@ -238,6 +240,7 @@ server <- function(input, output) {
       geom_text(aes(label = value)) +
       #scale_fill_gradientn(colors = species_color())
       scale_fill_gradient(low = "white", high = "#69b3a2") +
+      theme(legend.position = "none")+
       theme_void()
 
   })
@@ -264,11 +267,24 @@ server <- function(input, output) {
   })
 
   ### 3/8 Notes: Need to round to 2 decimals, need to adjust page layout so that "select species" box is smaller.
+  coral_plot_1 <- reactive({
+    coral_raw %>%
+      filter(genus == input$genus)
+  })
+
+  coral_plot_2 <- reactive({
+    coral_raw %>%
+      filter(genus == input$genus) %>%
+      filter(perc_dead == input$perc_dead)
+  })
 
   # tab 3 plot
   output$coral_plot <- renderPlot({
-    ggplot(data = coral_raw, aes(x = length, y = width)) +
-      geom_point(color = input$pt_color)
+    ggplot() +
+      geom_point(coral_plot_1(),color = "#69b3a2", aes(x = length, y = width, fill = genus)) +
+      theme_minimal() +
+      #geom_point(coral_plot_2(), color = 'black', aes(x = length, y = width, fill = genus)) +
+      theme(legend.position = "none")
   })
 
 }

@@ -13,6 +13,7 @@ library(ggspatial)
 library(janitor)
 library(ggplot2)
 library(plotly)
+library(DT)
 
 
 
@@ -140,6 +141,7 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                                   )
                                 ),
                                 mainPanel("Coral Details",
+                                          plotOutput(outputId = "coral_plot"),
                                           DT::dataTableOutput(outputId = "coral_table"))
                               )
                             )
@@ -211,7 +213,7 @@ server <- function(input, output) {
         location = "bl",
         width_hint = 0.2
       ) +
-      geom_sf(data = c_sf, aes(color = site, label=total_corals_found))+
+      geom_sf(data = c_sf, color = "#69b3a2", aes(label=total_corals_found))+
       theme(legend.position = "none")+
       coord_sf(xlim=c(-149.70,-149.95),ylim=c(-17.42,-17.62))
   })
@@ -264,7 +266,8 @@ server <- function(input, output) {
     ggplot(makefiver(), aes(Var1, Var2)) +
       geom_tile(aes(fill = value)) +
       geom_text(aes(label = value)) +
-      scale_fill_gradient(low = "white", high = "red") +
+      scale_fill_gradient(low = "white", high = "#69b3a2") +
+      theme(legend.position = "none") +
       theme_void()
 
   })
@@ -279,22 +282,30 @@ server <- function(input, output) {
         mean_length = mean(length),
         mean_width = mean(width),
         mean_area = mean(area),
-        mean_perc_dead = mean(perc_dead),
-        mean_perc_bleached = mean(perc_bleach),
+        mean_perc_dead = (mean(perc_dead)/100),
+        mean_perc_bleached = (mean(perc_bleach)/100)
       )
   })
   # tab 3 table
   output$coral_table <- DT::renderDataTable({
-    coral_table() #%>%
-    #formatRound(columns = c(3:9), digits = 2)
+    datatable(coral_table()) %>%
+      formatPercentage(c("mean_perc_dead", "mean_perc_bleached"), 2) %>%
+      formatRound(c(2:4), digits = 2)
   })
 
-  ### 3/8 Notes: Need to round to 2 decimals, need to adjust page layout so that "select species" box is smaller.
+
+  # tab 3 plot
+  coral_plot_1 <- reactive({
+    coral_raw %>%
+      filter(genus == input$genus)
+  })
 
   # tab 3 plot
   output$coral_plot <- renderPlot({
-    ggplot(data = coral_raw, aes(x = length, y = width)) +
-      geom_point(color = input$pt_color)
+    ggplot(coral_plot_1()) +
+      geom_point(color = "#69b3a2", aes(x = length, y = width, fill = genus)) +
+      theme_minimal() +
+      theme(legend.position = "none")
   })
 
 }
