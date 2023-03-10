@@ -91,10 +91,10 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                               width = 12,
                               align = "left",
                               style = "font-si8pt",
+                              em("Note: If '0' is displayed, there was no coral observed in this quadrat"),
                               br(),
                               br(),
                             ),
-                            # leafletOutput("locations", width = "100%", height = "100%"),
                             sidebarLayout(
                               sidebarPanel("Select Variable:",
                                            radioButtons(inputId = "genus_select",
@@ -115,23 +115,37 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                           ),
                  ),
                  tabPanel("Coral Plot",
-                          sidebarLayout(
-                            sidebarPanel(
-                              radioButtons(inputId = "genus",
-                                           label = "Select Coral Species",
-                                           choices = c("Pocillopora" = "poc","Acropora" = "acr")
-                              ),
-                              hr(),
-                              fluidRow(column(3, verbatimTextOutput("value"))
-                              )##,
-                              ##selectInput(inputId = "pt_color",
-                              ##label = "Select point color",
-                              ##choices = c("Purple Coral" = "purple", "Orange Coral" = "orange"))
-                            ),
-                            mainPanel("Coral Details",
-                                      ##plotOutput(outputId = "coral_plot"),
-                                      DT::dataTableOutput(outputId = "coral_table"))
-                          )),
+                          fluidRow(
+                            column(
+                              p("This table shows.... do we still want to make a plot?"),
+                              width = 12,
+                              align = "left",
+                              style = "font-si8pt",
+                              br(),
+                              br(),
+                              sidebarLayout(
+                                sidebarPanel(
+                                  radioButtons(inputId = "genus",
+                                               label = "Select Coral Species",
+                                               choices = c("Pocillopora" = "poc","Acropora" = "acr")
+                                  ),
+                                  hr(),
+                                  fluidRow(column(3, verbatimTextOutput("value")),
+                                           tags$img(src="poc.jpg",width="200px",height="150px"),
+                                           em("Pocillopora"),
+                                           br(),
+                                           br(),
+                                           tags$img(src="acr.jpg",width="200px",height="150px"),
+                                           em("Acropora")
+                                  )
+                                ),
+                                mainPanel("Coral Details",
+                                          DT::dataTableOutput(outputId = "coral_table"))
+                              )
+                            )
+                          )
+                 ),
+
 
                  tabPanel("Info & Data Sources",
                           titlePanel("About"),
@@ -207,16 +221,7 @@ server <- function(input, output) {
 
 
 
-
-  # tab2 spatial analysis
-  # output$locations <- renderLeaflet({
-  # leaflet(data = coordinates) %>%
-  # addTiles() %>%
-  # addMarkers("long" =~LONGITUDE, "lat" =~LATITUDE) %>%
-  # addProviderTiles(providers$Esri.WorldStreetMap)
-  # })
-
-  # grimes help for tab2
+  # spatial plot tab2
   makefiver <- reactive({
 
     data <- coral_grid %>%
