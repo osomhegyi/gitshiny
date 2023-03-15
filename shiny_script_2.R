@@ -290,7 +290,8 @@ server <- function(input, output) {
   output$coral_table <- DT::renderDataTable({
     datatable(coral_table()) %>%
       formatPercentage(c("mean_perc_dead", "mean_perc_bleached"), 2) %>%
-      formatRound(c(2:4), digits = 2)
+      formatRound(c(2:4), digits = 2) %>%
+      setNames(str_replace_all(names(.), "_", " "))
   })
 
 
