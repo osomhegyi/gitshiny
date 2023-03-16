@@ -42,7 +42,8 @@ c_sf <- coordinates %>%
   st_as_sf(coords = c("long", "lat"), crs = 4326)
 
 c_sf <- c_sf %>%
-  dplyr::summarise(total_corals_found = sum(coral_count))
+  dplyr::summarise(total_corals_found = sum(coral_count)) %>%
+  mutate (text = paste0("Site Number: ", site, "\n", "Number of Corals: ", total_corals_found))
 
 
 # This is our base map for tab1
@@ -213,7 +214,7 @@ server <- function(input, output) {
         location = "bl",
         width_hint = 0.2
       ) +
-      geom_sf(data = c_sf, color = "#69b3a2", aes(label=total_corals_found))+
+      geom_sf(data = c_sf, color = "#69b3a2", aes(text = text))+
       theme(legend.position = "none")+
       coord_sf(xlim=c(-149.70,-149.95),ylim=c(-17.42,-17.62))
   })
