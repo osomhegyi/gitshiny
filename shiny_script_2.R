@@ -1,5 +1,6 @@
 library(tidyverse)
 library(shiny)
+library(shinyWidgets)
 library(readxl)
 library(here)
 library(lubridate)
@@ -76,14 +77,25 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                                 of coral species Acropora and Pocilopora, either random or clustered. The map below respresents
                                 16 sites in the Northshore Lagoon of the MCR LTER."),
                               width = 12,
-                              align = "left"),
-                            br(),
-                            br(),
-                            br(),
-                            br(),
-                            br(),
-                            plotlyOutput("map", height=850, width=850)
-                          )
+                              align = "left",
+                              br(),
+                              br(),
+                              br(),
+                              br(),
+                              br()
+                            ),
+                            sidebarLayout(
+                              sidebarPanel(
+                                switchInput(inputId = "switch",
+                                            label = "View Data",
+                                            onLabel = "YES",
+                                            offLabel = "NO"),
+                                style = "position:fixed;width = 75vw",
+                                ),
+                              mainPanel(
+                                plotlyOutput("map", height=850, width=850))
+                            ),
+                          ),
                  ),
                  tabPanel("Spatial Distribution of Coral Samples",
                           titlePanel("Spatial Distribution of Coral Samples"),
@@ -209,6 +221,21 @@ server <- function(input, output) {
       filter(species == input$genus)
   })
 
+  # tab1 reactive
+  switch_site_select <- reactive({
+    if (input$switch == 'TRUE'){
+      c_sf #%>%
+      #filter(site == input$site_select)
+
+    }
+    else{
+      c_sf %>%
+        slice(1)
+      #no_data
+    }
+
+  })
+
   # tab1 map
   output$map <- renderPlotly({
     ggplot(data=fp)+
@@ -219,7 +246,7 @@ server <- function(input, output) {
         location = "bl",
         width_hint = 0.2
       ) +
-      geom_sf(data = c_sf, color = "#69b3a2", aes(text = text))+
+      geom_sf(data = switch_site_select(), color = "#69b3a2", aes(text = text))+
       theme(legend.position = "none")+
       coord_sf(xlim=c(-149.70,-149.95),ylim=c(-17.42,-17.62))
   })
