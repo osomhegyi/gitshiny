@@ -15,6 +15,7 @@ library(janitor)
 library(ggplot2)
 library(plotly)
 library(DT)
+library(bslib)
 
 
 
@@ -62,12 +63,22 @@ coral_grid <- coral_raw %>%
 ggplot(data = c_sf) +
   geom_sf()
 
+# our theme!
+our_theme <- bs_theme(
+  bg = "#F0FFF0",
+  fg = 'black',
+  primary = 'black',
+  heading_font = 'black',
+  base_fonts = font_google('Poppins'),
+  version = 3, bootswatch = "sandstone")
 
 
 #user interface:
-ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
-                 img(src = "reefbanner.jpg", height = 200, width = 1200),
+ui <- navbarPage("Moorea Corals", theme = our_theme,
+                 img(src="reefbanner.jpg", height="80%", width="100%", align="left"),
                  tabPanel("Overview",
+                          br(),
+                          br(),
                           titlePanel("Moorea, French Polynesia"),
                           fluidRow(
                             column(
@@ -133,7 +144,8 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                  tabPanel("Coral Plot",
                           fluidRow(
                             column(
-                              p("This table shows.... do we still want to make a plot?"),
+                              p("This plot shows the mean length and mean width of corals Pocillopora and Acropora.
+                                The table below displays the data..."),
                               width = 12,
                               align = "left",
                               style = "font-si8pt",
