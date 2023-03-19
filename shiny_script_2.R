@@ -64,6 +64,7 @@ ggplot(data = c_sf) +
 
 #user interface:
 ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
+                 img(src = "reefbanner.jpg", height = 200, width = 1200),
                  tabPanel("Overview",
                           titlePanel("Moorea, French Polynesia"),
                           fluidRow(
@@ -108,7 +109,8 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                                            selectInput(inputId = "plot_select",
                                                        label = h3("Plot Number"),
                                                        choices = unique(coral_grid$plot),
-                                                       selected = 1)
+                                                       selected = 1),
+                                           style = "position:fixed;width = 75vw",
                               ),
                               mainPanel(plotOutput("grid")
                               ),
@@ -132,17 +134,20 @@ ui <- navbarPage("Moorea Corals", theme = shinytheme("readable"),
                                   ),
                                   hr(),
                                   fluidRow(column(3, verbatimTextOutput("value")),
-                                           tags$img(src="poc.jpg",width="200px",height="150px"),
+                                           tags$img(src="poc.jpg",width="200px",height="150px", align = "left"),
+                                           br(),
                                            em("Pocillopora"),
                                            br(),
                                            br(),
-                                           tags$img(src="acr.jpg",width="200px",height="150px"),
+                                           tags$img(src="acr.jpg",width="200px",height="150px", align = "left"),
+                                           br(),
                                            em("Acropora")
-                                  )
+                                  ),
+                                  style = "position:fixed;width = 75vw",
                                 ),
-                                mainPanel("Coral Details",
-                                          plotOutput(outputId = "coral_plot"),
-                                          DT::dataTableOutput(outputId = "coral_table"))
+                mainPanel("Coral Details",
+                          plotOutput(outputId = "coral_plot"),
+                          DT::dataTableOutput(outputId = "coral_table"))
                               )
                             )
                           )
