@@ -80,15 +80,36 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                  tabPanel("Overview",
                           br(),
                           titlePanel("Project Overview"),
+                          br(),
+                          p("The Moorea Coral Reef Long-term Ecological Research (MCR LTER) site was established
+                                by the National Science Foundation in 2004 as a model system to better understand
+                                factors that mediate coral community structure and function."),
+                          br(),
+                          p("This app seeks to visualize data collected in the Moorea Coral Reef Long-term Ecological
+                            Research (MCR LTER) site to help to understand if there are any spatial patterns surveyed
+                            of coral species Acropora and Pocilopora, either random or clustered."),
+                          br(),
+                          p("Data for this project was collected at the MCR LTER site from 7/1/22 - 8/26/22."),
+                          width = 12,
+                          align = "left",
+                          br(),
+                          br(),
+                          column(
+                            tags$img(src="divers.jpg",width="90%",height="90%", align = "left"),
+                            width = 12,
+                            align = "left"),
+                          em("Researchers at the Moorea Coral Reef Long-term Ecological Research (LTER) site."),
+                          tags$a(href="http://mcr.lternet.edu/about/overview",
+                                 "Source: LTER"),
+                 ),
+                 tabPanel("Map of Moorea",
+                          titlePanel("Map of Moorea Research Sites"),
                           fluidRow(
                             column(
-                              p("This app seeks to visualize data collected in the Moorea Coral Reef Long-term Ecological
-                                Research (MCR LTER) site to help to understand if there are any spatial patterns surveyed
-                                of coral species Acropora and Pocilopora, either random or clustered."),
+                              p("The map below respresents
+                                16 sites in the Northshore Lagoon of the MCR LTER."),
                               width = 12,
                               align = "left",
-                              em("The map below respresents
-                                16 sites in the Northshore Lagoon of the MCR LTER."),
                               br(),
                               br(),
                               br(),
@@ -101,7 +122,7 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                                             onLabel = "YES",
                                             offLabel = "NO"),
                                 style = "position:absolute;width = 50vw",
-                                ),
+                              ),
                               mainPanel(
                                 h4("Moorea, French Polynesia"),
                                 plotlyOutput("map", height=650, width=650, inline = TRUE))
@@ -160,13 +181,13 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                                   ),
                                   hr(),
                                   fluidRow(column(3, verbatimTextOutput("value")),
-                                           tags$img(src="poc.jpg",width="200px",height="150px", align = "left"),
+                                           tags$img(src="poc1.jpg",width="200px",height="150px", align = "left"),
                                            br(),
                                            strong("Image 1:"),
                                            em("Pocillopora"),
                                            br(),
                                            br(),
-                                           tags$img(src="acr.jpg",width="200px",height="150px", align = "left"),
+                                           tags$img(src="acr1.jpg",width="200px",height="150px", align = "left"),
                                            br(),
                                            strong("Image 2:"),
                                            em("Acropora"),
@@ -177,30 +198,20 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                                   ),
                                   style = "position:absolute;width = 75vw",
                                 ),
-                mainPanel("Coral Details",
-                          plotOutput(outputId = "coral_plot"),
-                          DT::dataTableOutput(outputId = "coral_table"))
+                                mainPanel("Coral Details",
+                                          plotOutput(outputId = "coral_plot"),
+                                          DT::dataTableOutput(outputId = "coral_table"))
                               )
                             )
                           )
                  ),
-
-
                  tabPanel("Info & Data Sources",
-                          titlePanel("About"),
+                          titlePanel("Citations"),
                           fluidRow(
                             column(
-                              p("Coral reefs are among the most diverse and productive ecosystems on Earth.
-                                The Moorea Coral Reef Long-term Ecological Research (MCR LTER) site was established
-                                by the National Science Foundation in 2004 as a model system to better understand
-                                factors that mediate coral community structure and function."),
-                              tags$img(src="divers.jpg",width="800px",height="500px"),
                               width = 12,
-                              align = "left"),
-                            em("Researchers at the Moorea Coral Reef Long-term Ecological Research (LTER) site."),
-                            tags$a(href="http://mcr.lternet.edu/about/overview",
-                                   "Source: LTER"),
-                            column(
+                              align = "left",
+                              style = "font-si8pt",
                               br(),
                               br(),
                               strong("Data collection:"),
@@ -208,18 +219,20 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                               em("Data for this project was collected at the MCR LTER site from 7/1/22 - 8/26/22.
                                  Data was collected for coral species Acropora and Pocilopora from 16 sites,where
                                  five transects of 5x5 meter plots were sampled. Each plot contains 25 1x1 m quadrats."),
-                              width = 12,
-                              align = "left",
                               br(),
                               br(),
                               strong("Image citations:"),
-                              em(tags$a(href="http://www.coralsoftheworld.org/species_factsheets/species_factsheet_summary/pocillopora-eydouxi/",
-                                       "Source: Image 1"),
-                                br(),
-                                tags$a(href="http://www.coralsoftheworld.org/species_factsheets/species_factsheet_summary/acropora-millepora/",
-                                       "Source: Image 2"),
-                                ),
                               br(),
+                              em(tags$a(href="https://coralreefpalau.org/projects/climate-change-in-palau/coral-reef-reasearch-foundation-climate-change-banner/",
+                                        "Source: Website header")),
+                              br(),
+                              em(tags$a(href="http://www.coralsoftheworld.org/species_factsheets/species_factsheet_summary/pocillopora-eydouxi/",
+                                        "Source: Image 1"),
+                                 br(),
+                                 tags$a(href="http://www.coralsoftheworld.org/species_factsheets/species_factsheet_summary/acropora-millepora/",
+                                        "Source: Image 2"),
+                                 br(),
+                              ),
                               br(),
                               strong("Created by:"),
                               br(),
@@ -229,8 +242,8 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                               strong("Acklowledgments:"),
                               br(),
                               em("All data included in this app is collected and managed by"),
-                              tags$a(href="https://bren.ucsb.edu/people/olivia-isbell",
-                                     "Olivia Isbell,"), em("a PhD student at the Bren School of
+                              em(tags$a(href="https://bren.ucsb.edu/people/olivia-isbell",
+                                        "Olivia Isbell,")), em("a PhD student at the Bren School of
                                                            Environmental Science & Managment and researcher at MCR LTER."),
                               br(),
                               br(),
@@ -248,7 +261,7 @@ server <- function(input, output) {
       filter(species == input$genus)
   })
 
-  # tab1 reactive
+  # tab2 reactive
   switch_site_select <- reactive({
     if (input$switch == 'TRUE'){
       c_sf #%>%
@@ -263,7 +276,7 @@ server <- function(input, output) {
 
   })
 
-  # tab1 map
+  # tab2 map
   output$map <- renderPlotly({
     ggplot(data=fp)+
       geom_sf()+
@@ -283,7 +296,7 @@ server <- function(input, output) {
 
 
 
-  # spatial plot tab2
+  # spatial plot tab3
   makefiver <- reactive({
 
     data <- coral_grid %>%
@@ -333,35 +346,38 @@ server <- function(input, output) {
   })
 
 
-  # tab 3 table
-  coral_table <- reactive({
-    coral_raw %>%
-      filter(genus == input$genus) %>%
-      group_by(site) %>%
-      summarize(
-        mean_length = mean(length),
-        mean_width = mean(width),
-        mean_area = mean(area),
-        mean_perc_dead = (mean(perc_dead)/100),
-        mean_perc_bleached = (mean(perc_bleach)/100)
-      )
+  # tab 4 table
+
+
+    coral_table <- reactive({
+      coral_raw %>%
+        filter(genus == input$genus) %>%
+        rename(Site = site) %>%
+        group_by(Site) %>%
+        summarize(
+          `Mean length` = mean(length),
+          `Mean width` = mean(width),
+          `Mean area` = mean(area),
+          `Mean % dead` = (mean(perc_dead)/100),
+          `Mean % bleached` = (mean(perc_bleach)/100)
+        )
   })
-  # tab 3 table
+  # tab 4 table
   output$coral_table <- DT::renderDataTable({
     datatable(coral_table()) %>%
-      formatPercentage(c("mean_perc_dead", "mean_perc_bleached"), 2) %>%
+      formatPercentage(c("Mean % dead", "Mean % bleached"), 2) %>%
       formatRound(c(2:4), digits = 2) %>%
       setNames(str_replace_all(names(.), "_", " "))
   })
 
 
-  # tab 3 plot
+  # tab 4 plot
   coral_plot_1 <- reactive({
     coral_raw %>%
       filter(genus == input$genus)
   })
 
-  # tab 3 plot
+  # tab 4 plot
   output$coral_plot <- renderPlot({
     ggplot(coral_plot_1()) +
       geom_point(color = "#69b3a2", aes(x = length, y = width, fill = genus)) +
