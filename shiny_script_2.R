@@ -81,27 +81,34 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                           br(),
                           titlePanel("Project Overview"),
                           br(),
-                          p("The Moorea Coral Reef Long-term Ecological Research (MCR LTER) site was established
+                          sidebarLayout(
+                            sidebarPanel(
+                              tags$img(src="lter.jpg",width="90%",height="90%", align = "left"),
+                              br(),
+                              em("Researchers at the Moorea Coral Reef Long-term Ecological Research (LTER) site."),
+                              tags$a(href="http://mcr.lternet.edu/about/overview",
+                                     br(),
+                                     "Source: LTER"),
+                              ),
+                            mainPanel(
+                              fluidRow(
+                                column(
+                                  p("The Moorea Coral Reef Long-term Ecological Research (MCR LTER) site was established
                                 by the National Science Foundation in 2004 as a model system to better understand
                                 factors that mediate coral community structure and function."),
-                          br(),
-                          p("This app seeks to visualize data collected in the Moorea Coral Reef Long-term Ecological
+                                br(),
+                                p("This app seeks to visualize data collected in the Moorea Coral Reef Long-term Ecological
                             Research (MCR LTER) site to help to understand if there are any spatial patterns surveyed
                             of coral species Acropora and Pocilopora, either random or clustered."),
-                          br(),
-                          p("Data for this project was collected at the MCR LTER site from 7/1/22 - 8/26/22."),
-                          width = 12,
-                          align = "left",
-                          br(),
-                          br(),
-                          column(
-                            tags$img(src="divers.jpg",width="90%",height="90%", align = "left"),
+                            br(),
+                            p("Data for this project was collected at the MCR LTER site from 7/1/22 - 8/26/22."),
                             width = 12,
-                            align = "left"),
-                          em("Researchers at the Moorea Coral Reef Long-term Ecological Research (LTER) site."),
-                          tags$a(href="http://mcr.lternet.edu/about/overview",
-                                 "Source: LTER"),
-                 ),
+                            align = "left",
+                            br(),
+                            br(),
+                                ),
+                              )
+                            ))),
                  tabPanel("Map of Moorea",
                           titlePanel("Map of Moorea Research Sites"),
                           fluidRow(
@@ -349,18 +356,18 @@ server <- function(input, output) {
   # tab 4 table
 
 
-    coral_table <- reactive({
-      coral_raw %>%
-        filter(genus == input$genus) %>%
-        rename(Site = site) %>%
-        group_by(Site) %>%
-        summarize(
-          `Mean length` = mean(length),
-          `Mean width` = mean(width),
-          `Mean area` = mean(area),
-          `Mean % dead` = (mean(perc_dead)/100),
-          `Mean % bleached` = (mean(perc_bleach)/100)
-        )
+  coral_table <- reactive({
+    coral_raw %>%
+      filter(genus == input$genus) %>%
+      rename(Site = site) %>%
+      group_by(Site) %>%
+      summarize(
+        `Mean length` = mean(length),
+        `Mean width` = mean(width),
+        `Mean area` = mean(area),
+        `Mean % dead` = (mean(perc_dead)/100),
+        `Mean % bleached` = (mean(perc_bleach)/100)
+      )
   })
   # tab 4 table
   output$coral_table <- DT::renderDataTable({
