@@ -125,7 +125,7 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                             sidebarLayout(
                               sidebarPanel(
                                 switchInput(inputId = "switch",
-                                            label = "View Data",
+                                            label = "View Sites",
                                             onLabel = "YES",
                                             offLabel = "NO"),
                                 style = "position:absolute;width = 50vw",
@@ -173,8 +173,12 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                           titlePanel("Plotting Corals"),
                           fluidRow(
                             column(
-                              p("This plot shows the mean length and mean width of corals Pocillopora and Acropora.
-                                The table below displays the data..."),
+                              p("A comparison between Pocillopora and Acropora corals. The plot is a visual
+                                representation of the difference in length and width of Pocillorpora and
+                                Acropora corals, using data from each sampled coral. In addition to mean
+                                length and mean height, the table below displays the mean area, mean percent
+                                dead, and mean percent bleached of Pocillopora and Acropora corals for each of
+                                the surveyed sites."),
                               width = 12,
                               align = "left",
                               style = "font-si8pt",
@@ -243,15 +247,15 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                               br(),
                               strong("Created by:"),
                               br(),
-                              em("Olivia Somheygi & Jenna Anderson"),
+                              em("Olivia Somhegyi & Jenna Anderson"),
                               br(),
                               br(),
-                              strong("Acklowledgments:"),
+                              strong("Acknowledgments:"),
                               br(),
                               em("All data included in this app is collected and managed by"),
                               em(tags$a(href="https://bren.ucsb.edu/people/olivia-isbell",
                                         "Olivia Isbell,")), em("a PhD student at the Bren School of
-                                                           Environmental Science & Managment and researcher at MCR LTER."),
+                                                           Environmental Science & Management and researcher at MCR LTER."),
                               br(),
                               br(),
                               em("Special thanks to NGGGGGGGrimes and Casey."),
@@ -347,8 +351,8 @@ server <- function(input, output) {
       geom_tile(aes(fill = value)) +
       geom_text(aes(label = value)) +
       scale_fill_gradient(low = "white", high = "#69b3a2") +
-      theme(legend.position = "none") +
-      theme_void()
+      theme_void() +
+      theme(legend.position = "none")
 
   })
 
