@@ -113,7 +113,7 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                           titlePanel("Map of Moorea Research Sites"),
                           fluidRow(
                             column(
-                              p("The map below respresents
+                              p("The map below represents
                                 16 sites in the Northshore Lagoon of the MCR LTER."),
                               width = 12,
                               align = "left",
@@ -173,8 +173,7 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                           titlePanel("Plotting Corals"),
                           fluidRow(
                             column(
-                              p("A comparison between Pocillopora and Acropora corals. The plot is a visual
-                                representation of the difference in length and width of Pocillorpora and
+                              p("A comparison between Pocillopora and Acropora corals. The plot is a visual representation of the difference in length and width of Pocillorpora and
                                 Acropora corals, using data from each sampled coral. In addition to mean
                                 length and mean height, the table below displays the mean area, mean percent
                                 dead, and mean percent bleached of Pocillopora and Acropora corals for each of
@@ -209,8 +208,8 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                                   ),
                                   style = "position:absolute;width = 75vw",
                                 ),
-                                mainPanel("Coral Details",
-                                          plotOutput(outputId = "coral_plot"),
+                                mainPanel(
+                                  plotOutput(outputId = "coral_plot"),
                                           DT::dataTableOutput(outputId = "coral_table"))
                               )
                             )
@@ -393,7 +392,9 @@ server <- function(input, output) {
     ggplot(coral_plot_1()) +
       geom_point(color = "#69b3a2", alpha = .3, aes(x = length, y = width, fill = genus)) +
       theme_minimal() +
-      theme(legend.position = "none")
+      theme(legend.position = "none") +
+      labs(x = "Measured Length",
+           y = "Measured Width")
   })
 
 }
