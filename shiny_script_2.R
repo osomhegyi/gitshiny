@@ -101,7 +101,7 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                             Research (MCR LTER) site to help to understand if there are any spatial patterns surveyed
                             of coral species Acropora and Pocilopora, either random or clustered."),
                             br(),
-                            p("Data for this project was collected at the MCR LTER site from 7/1/22 - 8/26/22."),
+                            p("Data for this project was collected at the MCR LTER site from 7/1/22 - 8/26/22 by Olivia Isbell."),
                             width = 12,
                             align = "left",
                             br(),
@@ -391,7 +391,7 @@ server <- function(input, output) {
   # tab 4 plot
   output$coral_plot <- renderPlot({
     ggplot(coral_plot_1()) +
-      geom_point(color = "#69b3a2", aes(x = length, y = width, fill = genus)) +
+      geom_point(color = "#69b3a2", alpha = .3, aes(x = length, y = width, fill = genus)) +
       theme_minimal() +
       theme(legend.position = "none")
   })
