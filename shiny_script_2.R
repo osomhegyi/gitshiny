@@ -93,15 +93,15 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                             mainPanel(
                               fluidRow(
                                 column(
-                                  p("The Moorea Coral Reef Long-term Ecological Research (MCR LTER) site was established
-                                by the National Science Foundation in 2004 as a model system to better understand
-                                factors that mediate coral community structure and function."),
-                                br(),
-                                p("This app seeks to visualize data collected in the Moorea Coral Reef Long-term Ecological
+                                  p("This app seeks to visualize data collected in the Moorea Coral Reef Long-term Ecological
                             Research (MCR LTER) site to help to understand if there are any spatial patterns surveyed
                             of coral species Acropora and Pocilopora, either random or clustered."),
+                                br(),
+                                p("The Moorea Coral Reef Long-term Ecological Research site was established
+                                by the National Science Foundation in 2004 as a model system to better understand
+                                factors that mediate coral community structure and function."),
                             br(),
-                            p("Data for this project was collected at the MCR LTER site from 7/1/22 - 8/26/22 by Olivia Isbell."),
+                            p("Data for this project was collected at the MCR LTER site from 7/1/22 - 8/26/22 by", (tags$a(href="https://bren.ucsb.edu/people/olivia-isbell", "Olivia Isbell."))),
                             width = 12,
                             align = "left",
                             br(),
@@ -113,7 +113,7 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                           titlePanel("Map of Moorea Research Sites"),
                           fluidRow(
                             column(
-                              p("The map below represents
+                              p("The map below represents the location and coral counts of
                                 16 sites in the Northshore Lagoon of the MCR LTER."),
                               width = 12,
                               align = "left",
