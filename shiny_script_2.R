@@ -257,7 +257,7 @@ ui <- navbarPage("Moorea Corals", theme = our_theme,
                                                            Environmental Science & Management and researcher at MCR LTER."),
                               br(),
                               br(),
-                              em("Special thanks to NGGGGGGGrimes and Casey."),
+                              em("Special thanks to Grimes and Casey, we couldn't have done this wihtout you!"),
                               br()),
                           )
                  )
